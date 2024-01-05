@@ -10,6 +10,7 @@ const searchParams = {
   image_type: 'photo',
   orientation: 'horizontal',
   safesearch: 'true',
+  per_page: 60,
 };
 
 const simpleGallery = new SimpleLightbox('.gallery a', {
