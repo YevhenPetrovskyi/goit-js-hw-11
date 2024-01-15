@@ -24,7 +24,7 @@ const searchInput = document.querySelector('.search-input');
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 
-form.addEventListener('submit', event => searchPhotos(event));
+form.addEventListener('submit', searchPhotos);
 
 function searchPhotos(event) {
   event.preventDefault();
@@ -32,9 +32,16 @@ function searchPhotos(event) {
     showErrorMessage('Please fill in the search field');
     return;
   }
+
+  const form = event.currentTarget;
+
   fetchPhotos()
     .then(photos => createGallery(photos))
-    .catch(error => showErrorMessage(`Something was wrong ${error}`));
+    .catch(error => showErrorMessage(`Something was wrong ${error}`))
+    .finally(() => {
+      form.reset();
+      simpleGallery.refresh();
+    });
 }
 
 function fetchPhotos() {
@@ -71,8 +78,7 @@ function createGallery(photos) {
         comments,
         downloads,
       }) => {
-        return `
-        <li class="gallery-item">
+        return `<li class="gallery-item">
           <a href="${largeImageURL}">
             <img class="api-img" src="${webformatURL}" alt="${tags}">
             <div class="img-desc">
@@ -82,15 +88,12 @@ function createGallery(photos) {
               <span><b>Downloads:</b> <br/>${downloads}</span>
             </div>
           </a>
-        </li>
-                  `;
+        </li>`;
       }
     )
     .join('');
   gallery.insertAdjacentHTML('afterbegin', markup);
   loader.style.display = 'none';
-  simpleGallery.refresh();
-  form.reset();
 }
 
 function showErrorMessage(message) {
