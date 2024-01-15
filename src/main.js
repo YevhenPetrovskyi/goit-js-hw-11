@@ -24,7 +24,9 @@ const searchInput = document.querySelector('.search-input');
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 
-form.addEventListener('submit', event => {
+form.addEventListener('submit', event => searchPhotos(event));
+
+function searchPhotos(event) {
   event.preventDefault();
   if (!searchInput.value.trim()) {
     showErrorMessage('Please fill in the search field');
@@ -32,8 +34,8 @@ form.addEventListener('submit', event => {
   }
   fetchPhotos()
     .then(photos => createGallery(photos))
-    .catch(error => console.error('Error:', error));
-});
+    .catch(error => showErrorMessage(`Something was wrong ${error}`));
+}
 
 function fetchPhotos() {
   gallery.innerHTML = '';
@@ -87,7 +89,6 @@ function createGallery(photos) {
     .join('');
   gallery.insertAdjacentHTML('afterbegin', markup);
   loader.style.display = 'none';
-  searchParams.q = '';
   simpleGallery.refresh();
   form.reset();
 }
